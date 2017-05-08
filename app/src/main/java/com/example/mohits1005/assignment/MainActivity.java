@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                                     else if(obj.getJSONObject(user).getString("password").equals(pass)){
                                         /*If password matches*/
                                         Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(MainActivity.this, UserList.class));
                                     }
                                     else {
                                         Toast.makeText(MainActivity.this, "incorrect password", Toast.LENGTH_LONG).show();
