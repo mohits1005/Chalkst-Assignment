@@ -41,6 +41,7 @@ import java.util.Map;
 
 public class ChatRoom  extends AppCompatActivity {
     Button block_btn;
+    Button del_conversation;
     LinearLayout layout;
     ImageView sendButton;
     EditText messageArea;
@@ -117,15 +118,11 @@ public class ChatRoom  extends AppCompatActivity {
                 Map map = dataSnapshot.getValue(Map.class);
                 String message = map.get("message").toString();
                 String userName = map.get("user").toString();
-
-                if(userName.equals(UserDetails.username)){
-                    //addMessageBox("You:-\n" + message, 1);
-                    addMessageBox(message, 1);
-                }
-                else{
-                    //addMessageBox(UserDetails.chatWith + ":-\n" + message, 2);
-                    addMessageBox(message, 2);
-                }
+                    if (userName.equals(UserDetails.username)) {
+                        addMessageBox(message, 1);
+                    } else {
+                        addMessageBox(message, 2);
+                    }
             }
 
             @Override
@@ -165,6 +162,32 @@ public class ChatRoom  extends AppCompatActivity {
                         //reference.child(user_b).setValue(user+'-'+chatWith);
                         reference.child(user+'-'+chatWith).child("status").setValue("1");
                         Toast.makeText(ChatRoom.this, chatWith+" blocked successfully", Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        System.out.println("" + volleyError);
+                    }
+                });
+                RequestQueue rQueue = Volley.newRequestQueue(ChatRoom.this);
+                rQueue.add(request);
+            }
+        });
+        /*Create onclick listener for delete conversation*/
+        del_conversation = (Button) findViewById(R.id.del_conversation);
+        del_conversation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://myapplication-8e299.firebaseio.com/messages.json";
+                final String user = UserDetails.username;
+                final String chatWith = UserDetails.chatWith;
+                final String user_b = user+"-"+chatWith;
+                StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        Firebase reference1 = new Firebase("https://myapplication-8e299.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
+                        reference1.setValue(null);
+                        Toast.makeText(ChatRoom.this," Conversation Deleted !", Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
                     @Override
