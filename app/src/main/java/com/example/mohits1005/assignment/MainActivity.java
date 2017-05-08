@@ -90,5 +90,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        /*Set onclick listener for register button */
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, Register.class));
+            }
+        });
     }
 }
