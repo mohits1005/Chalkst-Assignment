@@ -2,10 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<Button
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
-    android:text="Block User"
-    android:id="@+id/block_btn"
-    />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reciever_name"
+            android:text="Reciever"
+            android:layout_alignParentLeft="true"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            />
+        <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Block"
+        android:id="@+id/block_btn"
+        android:layout_alignParentRight="true"
+        />
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_weight="20"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_marginTop="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/layout1">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        layout="@layout/message_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_marginTop="5dp"/>
 </LinearLayout>
