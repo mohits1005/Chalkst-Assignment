@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "user not found", Toast.LENGTH_LONG).show();
                                     }
                                     else if(obj.getJSONObject(user).getString("password").equals(pass)){
-                                        /*If password matches*/
+                                       /*If password matches*/
                                         UserDetails.username = user;
                                         UserDetails.password = pass;
                                         Toast.makeText(MainActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();

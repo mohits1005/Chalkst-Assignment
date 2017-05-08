@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class ChatRoom  extends AppCompatActivity {
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
+    Integer flag = 0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_room);
@@ -57,6 +59,42 @@ public class ChatRoom  extends AppCompatActivity {
         final String user = UserDetails.chatWith;
         TextView reciever_name = (TextView) findViewById(R.id.reciever_name);
         reciever_name.setText(user);
+        //Check if user is not blocked
+        final String user_first = UserDetails.username;
+        final String user_second = UserDetails.chatWith;
+        String url = "https://myapplication-8e299.firebaseio.com/users_blocked.json";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                String user_str = user_second+"-"+user_first;
+
+                if (s.equals("null")) {
+
+                } else {
+                    try {
+                        JSONObject obj = new JSONObject(s);
+                        if (!obj.has(user_str)) {
+
+                        } else {
+                            flag = 1;
+                            Toast.makeText(ChatRoom.this, "You have been blocked by the user!", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(ChatRoom.this);
+        rQueue.add(request);
+
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://myapplication-8e299.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         reference2 = new Firebase("https://myapplication-8e299.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
@@ -64,8 +102,7 @@ public class ChatRoom  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
-
-                if(!messageText.equals("")){
+                if(!messageText.equals("") && flag == 0){
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
@@ -125,7 +162,8 @@ public class ChatRoom  extends AppCompatActivity {
                     @Override
                     public void onResponse(String s) {
                         Firebase reference = new Firebase("https://myapplication-8e299.firebaseio.com/users_blocked");
-                        reference.child(user_b).setValue(user+'-'+chatWith);
+                        //reference.child(user_b).setValue(user+'-'+chatWith);
+                        reference.child(user+'-'+chatWith).child("status").setValue("1");
                         Toast.makeText(ChatRoom.this, chatWith+" blocked successfully", Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
