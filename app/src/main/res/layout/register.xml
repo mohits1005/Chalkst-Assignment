@@ -44,7 +44,35 @@
         android:background="#15AD6A"
         android:textColor="#FFF"
         />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/lrl"
+        >
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/usr_otp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="OTP"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/usr_otp_btn"
+            android:layout_marginBottom="20dp"
+            android:background="#15AD6A"
+            android:textColor="#FFF"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            />
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

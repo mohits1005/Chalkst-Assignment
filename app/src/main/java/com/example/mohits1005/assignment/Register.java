@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,11 @@ public class Register  extends AppCompatActivity{
                 startActivity(new Intent(Register.this, MainActivity.class));
             }
         });
+
+        LinearLayout lrl = (LinearLayout) findViewById(R.id.lrl);
+        lrl.setVisibility(View.GONE);
+
+
         /*Adding onclick listener for register button*/
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,44 +85,73 @@ public class Register  extends AppCompatActivity{
                     usr_mobile.setError("Invalid mobile number");
                 }
                 else {
-                    Toast.makeText(Register.this, "Loading", Toast.LENGTH_LONG).show();
-                    String url = "https://myapplication-8e299.firebaseio.com/users.json";
-
-                    StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
+                    LinearLayout lrl = (LinearLayout) findViewById(R.id.lrl);
+                    lrl.setVisibility(View.VISIBLE);
+                    Button usr_otp_btn= (Button)findViewById(R.id.usr_otp_btn);
+                    String url2 = "http://cscomment.esy.es/sms/test.php";
+                    StringRequest request2 = new StringRequest(Request.Method.GET, url2, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            Firebase reference = new Firebase("https://myapplication-8e299.firebaseio.com/users");
-
-                            if(s.equals("null")) {
-                                reference.child(user).child("password").setValue(pass);
-                                Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                try {
-                                    JSONObject obj = new JSONObject(s);
-
-                                    if (!obj.has(user)) {
-                                        reference.child(user).child("password").setValue(pass);
-                                        reference.child(user).child("mobile").setValue(mobile);
-                                        Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Register.this, "username already exists", Toast.LENGTH_LONG).show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            Toast.makeText(Register.this, "OTP sent", Toast.LENGTH_LONG).show();
                         }
-                    },new Response.ErrorListener(){
+                    }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            System.out.println("" + volleyError );
+                            Toast.makeText(Register.this, "OTP Error", Toast.LENGTH_LONG).show();
                         }
                     });
+                    RequestQueue rQueue2 = Volley.newRequestQueue(Register.this);
+                    rQueue2.add(request2);
+                    usr_otp_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EditText usr_otp = (EditText)findViewById(R.id.usr_otp);
+                            String mobile_otp = usr_otp.getText().toString();
+                            if (mobile_otp.equals("1000")) {
+                                Toast.makeText(Register.this, "Loading", Toast.LENGTH_LONG).show();
+                                String url = "https://myapplication-8e299.firebaseio.com/users.json";
 
-                    RequestQueue rQueue = Volley.newRequestQueue(Register.this);
-                    rQueue.add(request);
+                                StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String s) {
+                                        Firebase reference = new Firebase("https://myapplication-8e299.firebaseio.com/users");
+
+                                        if (s.equals("null")) {
+                                            reference.child(user).child("password").setValue(pass);
+                                            Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            try {
+                                                JSONObject obj = new JSONObject(s);
+
+                                                if (!obj.has(user)) {
+                                                    reference.child(user).child("password").setValue(pass);
+                                                    reference.child(user).child("mobile").setValue(mobile);
+                                                    Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    Toast.makeText(Register.this, "username already exists", Toast.LENGTH_LONG).show();
+                                                }
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError volleyError) {
+                                        System.out.println("" + volleyError);
+                                    }
+                                });
+
+                                RequestQueue rQueue = Volley.newRequestQueue(Register.this);
+                                rQueue.add(request);
+                            }
+                            else
+                            {
+                                Toast.makeText(Register.this, "OTP is wrong !", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 }
             }
         });
