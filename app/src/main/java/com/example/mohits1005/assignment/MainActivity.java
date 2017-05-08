@@ -1,5 +1,6 @@
 package com.example.mohits1005.assignment;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,34 +31,32 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
             @Override
             public void onResponse(String s) {
-                Firebase reference = new Firebase("https://myapplication-8e299.firebaseio.com/users");
-
-                if(s.equals("null")) {
-                    reference.child(user).child("password").setValue(pass);
-                    Toast.makeText(MainActivity.this, "registration successful", Toast.LENGTH_LONG).show();
+                if(s.equals("null")){
+                    Toast.makeText(MainActivity.this, "user not found", Toast.LENGTH_LONG).show();
                 }
-                else {
+                else{
                     try {
                         JSONObject obj = new JSONObject(s);
 
-                        if (!obj.has(user)) {
-                            reference.child(user).child("password").setValue(pass);
-                            Toast.makeText(MainActivity.this, "registration successful", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "username already exists", Toast.LENGTH_LONG).show();
+                        if(!obj.has(user)){
+                            Toast.makeText(MainActivity.this, "user not found", Toast.LENGTH_LONG).show();
                         }
-
+                        else if(obj.getJSONObject(user).getString("password").equals(pass)){
+                            Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "incorrect password", Toast.LENGTH_LONG).show();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
             }
-
         },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                System.out.println("" + volleyError );
+                System.out.println("" + volleyError);
             }
         });
 
